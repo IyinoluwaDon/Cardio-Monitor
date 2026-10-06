@@ -1,7 +1,4 @@
-"""Cardio Monitor - Streamlit edition.
-
-Streamlit rewrite by Iyinoluwa Don-Taiwo of the original Flask app by
-Sarvesh Kumar Sharma. No database: the model is trained from heart.csv.
+"""Cardio Monitor
 """
 from pathlib import Path
 
@@ -63,11 +60,10 @@ def footer():
     st.markdown(
         """
         <div class="footer">
-        Streamlit edition by Iyinoluwa Don-Taiwo
+        Streamlit
         &nbsp;|&nbsp;
         <a href="https://github.com/IyinoluwaDon/Cardio-Monitor" target="_blank">GitHub</a><br>
         <span style="font-weight:400;font-size:0.85rem;">
-        Based on the original Flask project by Sarvesh Kumar Sharma
         </span>
         </div>
         """,
