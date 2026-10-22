@@ -5,6 +5,7 @@ Streamlit. No database and no pickled model files are needed.
 """
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -51,8 +52,8 @@ def load_data() -> pd.DataFrame:
 def train_model():
     """Train a MinMax-scaled KNN (k=7) on heart.csv.
 
-    Returns (model, test_accuracy). In this dataset target 1 means
-    low risk and target 0 means high risk.
+    Returns (model, test_accuracy). The numeric target codebook is not established by the bundled CSV.
+    Scores refer to class 1, not a personal medical risk.
     """
     df = load_data()
     X, y = df[FEATURES], df["target"]
@@ -68,14 +69,18 @@ def train_model():
 
 
 def reference_values() -> pd.Series:
-    """Average value of each feature for the low-risk group (target == 1)."""
+    """Average value of each feature for the source target-1 group."""
     df = load_data()
     return df[df["target"] == 1][FEATURES].mean()
 
 
 def predict(model, record: dict):
-    """Return (label, low_risk_probability). label 1 = low risk, 0 = high risk."""
+    """Return (numeric label, class-1 probability); clinical meaning unverified."""
+    if set(record) != set(FEATURES):
+        raise ValueError("Provide exactly the 13 documented features")
     row = pd.DataFrame([record], columns=FEATURES)
+    if not np.isfinite(row.to_numpy(dtype=float)).all():
+        raise ValueError("All feature values must be finite numbers")
     label = int(model.predict(row)[0])
     low_risk_prob = float(model.predict_proba(row)[0][list(model.classes_).index(1)])
     return label, low_risk_prob

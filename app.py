@@ -45,7 +45,7 @@ def bar_chart(labels, reference, user, title):
     x = np.arange(len(labels))
     w = 0.38
     ax.bar(x - w / 2, reference, w, color="g", edgecolor="grey",
-           label="Typical low-risk value")
+           label="Source class-1 mean")
     ax.bar(x + w / 2, user, w, color="r", edgecolor="grey", label="Your value")
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
@@ -134,16 +134,16 @@ def predict_page():
         st.header("Prediction")
         st.subheader(f"Hello {who}")
         if label == 1:
-            st.success(
-                "The model assigned this input to its **lower-risk class**. "
-                "This is not evidence that you are healthy or free of disease."
+            st.info(
+                "The model assigned this input to its **source target-1 class**. "
+                "The bundled CSV has no verified clinical target codebook."
             )
         else:
-            st.error(
-                "The model assigned this input to its **higher-risk class**. "
+            st.info(
+                "The model assigned this input to its **source target-0 class**. "
                 "This is not a diagnosis or an estimate of your personal risk."
             )
-        st.metric("Model probability for lower-risk class", f"{low_risk_prob * 100:.0f}%")
+        st.metric("Model probability for source target-1 class", f"{low_risk_prob * 100:.0f}%")
 
         ref = get_reference()
         st.subheader("Input comparison")

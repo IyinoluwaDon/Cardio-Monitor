@@ -1,3 +1,5 @@
+> Target-code correction: the bundled CSV does not establish a clinical class codebook. The app reports source target 0/1 and a class-1 score; previous high/low-risk interpretations in historical documentation are unverified. Test accuracy is a fixed internal split, not external or clinical validation. Run `python -m pytest -q` for real training/inference and malformed-input checks.
+
 <h1><img src="static/heartlogo.png" width="50px" /> Cardio Monitor</h1>
 
 **A Streamlit web app that estimates your risk of heart disease from 13 clinical inputs.**
