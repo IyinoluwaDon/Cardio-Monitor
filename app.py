@@ -76,8 +76,8 @@ def predict_page():
     left.image(str(STATIC / "heartlogo.png"), width=80)
     right.title("Cardio Monitor")
     st.write(
-        "Find out whether you are at risk of developing heart disease. "
-        "Fill in the details below and press **Predict**."
+        "Explore how a small educational model classifies inputs similar to "
+        "its training data. This result is not a personal medical risk estimate."
     )
 
     with st.form("patient_form"):
@@ -108,7 +108,7 @@ def predict_page():
         restecg = c2.selectbox("Resting ECG results (restecg)", list(cm.REST_ECG))
         submitted = st.form_submit_button("Predict", type="primary", width="stretch")
 
-    st.caption("Your inputs are used only for this prediction and are not stored.")
+    st.caption("Inputs are used for this prediction and are not stored.")
 
     if submitted:
         record = {
@@ -135,19 +135,18 @@ def predict_page():
         st.subheader(f"Hello {who}")
         if label == 1:
             st.success(
-                "Good news. You have **very low chances of getting heart disease**. "
-                "Open **About heart disease** in the sidebar to learn more."
+                "The model assigned this input to its **lower-risk class**. "
+                "This is not evidence that you are healthy or free of disease."
             )
         else:
             st.error(
-                "You have a **high risk of getting heart disease**. "
-                "Please contact your doctor. Open **About heart disease** "
-                "in the sidebar to learn more."
+                "The model assigned this input to its **higher-risk class**. "
+                "This is not a diagnosis or an estimate of your personal risk."
             )
-        st.metric("Model estimate of low risk", f"{low_risk_prob * 100:.0f}%")
+        st.metric("Model probability for lower-risk class", f"{low_risk_prob * 100:.0f}%")
 
         ref = get_reference()
-        st.subheader("Your data statistics")
+        st.subheader("Input comparison")
         g1, g2 = st.columns(2)
         keys1 = ["cp", "fbs", "restecg", "exang", "oldpeak", "slope", "ca", "thal"]
         keys2 = ["trestbps", "chol", "thalach"]
@@ -158,8 +157,9 @@ def predict_page():
                             [float(record[k]) for k in keys2],
                             "Blood pressure, cholesterol, heart rate"))
         st.warning(
-            "This is only a prediction and not medical advice. "
-            "See a doctor if symptoms persist."
+            "Educational demonstration only; it has not been clinically validated. "
+            "Do not use its output to make healthcare decisions. Seek professional "
+            "care for health concerns."
         )
 
 
