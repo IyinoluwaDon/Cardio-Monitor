@@ -1,76 +1,37 @@
-> Target-code correction: the bundled CSV does not establish a clinical class codebook. The app reports source target 0/1 and a class-1 score; previous high/low-risk interpretations in historical documentation are unverified. Test accuracy is a fixed internal split, not external or clinical validation. Run `python -m pytest -q` for real training/inference and malformed-input checks.
+# Cardio Monitor — Heart Dataset Explorer
 
-<h1><img src="static/heartlogo.png" width="50px" /> Cardio Monitor</h1>
+A Streamlit application for exploring a 13-input K-nearest-neighbors model trained on the bundled Cleveland heart-disease dataset. It presents the source class and model score without assigning an unverified clinical risk meaning.
 
-**A Streamlit web app that estimates your risk of heart disease from 13 clinical inputs.**
+## What is included
 
-Built and maintained by **[Iyinoluwa Don-Taiwo](https://github.com/IyinoluwaDon)**.
+- Interactive input form and dataset visualizations
+- Model is trained from `heart.csv` when the app starts
+- No database or user-input persistence
 
-The model is a K-Nearest Neighbors classifier (k = 7, min-max scaling) trained on the UCI Cleveland heart disease dataset (`heart.csv`, 303 records). It reaches about **90% accuracy** on a held-out 20% test split.
+## Run locally
 
-> **Disclaimer:** This is an educational project. It is not medical advice. See a doctor if you have symptoms or concerns.
-
-## Features
-
-- Predict page with a clean form for all 13 inputs
-- Low-risk or high-risk result with a model confidence estimate
-- Charts that compare your values to the typical low-risk group
-- "About heart disease" page covering types, symptoms, risk factors, and prevention
-- No database. Nothing you enter is stored. The model trains from `heart.csv` when the app starts
-
-## Run it locally
-
-```bash
-git clone https://github.com/IyinoluwaDon/Cardio-Monitor.git
-cd Cardio-Monitor
+```sh
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+# Activate .venv, then:
+python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Open the local URL that Streamlit prints (usually http://localhost:8501).
+## Verify
 
-## Deploy on Streamlit Community Cloud
+python -m pip install pytest
+python -m pytest -q
 
-1. Push this repo to your GitHub account.
-2. Go to [share.streamlit.io](https://share.streamlit.io) and click **New app**.
-3. Pick the repo, set the main file to `app.py`, and deploy.
+## Repository map
 
-## Project structure
+`app.py` is the Streamlit interface. `model.py` handles data preparation and prediction. `heart.csv` is the bundled dataset; `tests/` covers the model/input contract. `DOCUMENTATION.md` retains additional project notes.
 
-```
-Cardio-Monitor/
-├── app.py              # Streamlit interface (Predict and About pages)
-├── model.py            # Data loading, encoding maps, model training, prediction
-├── heart.csv           # Training data
-├── requirements.txt
-├── static/             # Logo and About page slides
-├── .streamlit/         # Theme config
-└── heart disease prediction/   # Original EDA and research notebooks
-```
+## Evidence and limitations
 
-## How it works
+The bundled data contains 303 records and the model code runs locally. Tests exercise training and input validation; the internal split is not an independent clinical evaluation.
 
-1. `model.py` loads `heart.csv`, scales every feature to 0-1, and fits a KNN classifier.
-2. `app.py` turns your form answers into the same numeric codes the dataset uses.
-3. The model returns a class (1 = low risk, 0 = high risk) and the share of neighbors that voted low risk.
-4. Streamlit caches the trained model, so predictions are instant after the first load.
+Educational use only; not a medical device or medical advice. The CSV does not establish a trustworthy clinical codebook for class 0/1. Confirm dataset provenance and license before redistribution, and do not use predictions to make care decisions.
 
-## What changed from the original Flask version
+## License
 
-- Moved the whole interface from Flask and HTML templates to Streamlit
-- Removed MongoDB, the hit counters, and all stored user data
-- Removed the pickled model files, which break on current scikit-learn. The model now trains from the CSV at startup
-- Fixed sex encoding. The old code sent `Male` but checked for `male`, so every user was scored as female
-- Fixed the `thal` encoding so it matches the dataset (1 fixed, 2 normal, 3 reversible)
-- Fixed the chest pain mismatch between the prediction and chart code
-- Relabeled the chart baseline as the typical low-risk value. The old "Normal Value" was actually the high-risk group average
-
-## Credits and license
-
-Copyright (c) 2026 Iyinoluwa Don-Taiwo, Streamlit edition.
-
-This project is a derivative of the original Flask app [Cardio-Monitor](https://github.com/shsarv/Cardio-Monitor) by Sarvesh Kumar Sharma, created as a Big Data Analytics course project. The EDA notebooks in `heart disease prediction/` come from that original work. See [LICENSE](LICENSE).
-
-Dataset: UCI Heart Disease (Cleveland).
+See [LICENSE](LICENSE) for the repository license. Dataset and pretrained-model licenses may be separate.
